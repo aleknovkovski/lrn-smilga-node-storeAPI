@@ -9,3 +9,17 @@ const errorMiddleware = require('./middleware/error-handler')
 
 app.use(notFoundMiddleware)
 app.use(errorMiddleware)
+
+const port = process.env.PORT || 5000
+
+async function start () {
+    try {
+        //connect DB here
+        app.listen(5000, console.log('Server listening on port ' + port))
+    }
+    catch (error) {
+
+    }
+}
+
+start()
