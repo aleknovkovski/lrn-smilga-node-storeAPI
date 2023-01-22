@@ -21,8 +21,17 @@ function queryObject(query) {
     return queryObject
 }
 
+const splitString = (sort) => {
+    return sort.split(',').join(' ');
+}
+
 async function getAllProducts (req, res) {
-    const products = await Product.find(queryObject(req.query));
+    const {query} = req; const {sort} = query;
+
+    let results = Product.find(queryObject(query));
+    sort ? results = results.sort(splitString(sort)) : null;
+    const products = await results
+
     res.status(200).json({message: 'products route', products})
 }
 
