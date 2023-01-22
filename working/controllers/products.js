@@ -12,12 +12,41 @@ const propLogic = (prop, value) => {
     }
 }
 
+function numericFilters(initialQueryObject, numericFilters) {
+    const queryObject = {...initialQueryObject}
+    const operators = {
+        '>': '$gt',
+        '>=': '$gte',
+        '=': '$eq',
+        '<': '$lt',
+        '<=': '$lte',
+    };
+    const regEx = /\b(<|>|>=|=|<|<=)\b/g;
+    let filters = numericFilters.replace(
+        regEx, (match) => `-${operators[match]}-`
+    );
+
+    const options = ['price', 'rating'];
+    filters.split(',').forEach((item) => {
+        const [field, operator, value] = item.split('-');
+        if (options.includes(field)) {
+            queryObject[field] = { [operator]: Number(value) };
+        }
+    });
+    return queryObject;
+}
+
 function queryObject(query) {
-    const queryObject = {}
+    let queryObject = {}
     Object.keys(query).map(prop => {
         const value = query[prop]
         value ? queryObject[prop] = propLogic(prop, value) : null;
     })
+
+    if(query.numericFilters) {
+        queryObject = numericFilters(queryObject, query.numericFilters)
+    }
+
     return queryObject
 }
 
