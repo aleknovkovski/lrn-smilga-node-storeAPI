@@ -5,11 +5,18 @@ async function getAllProductsStatic (req, res) {
     res.status(200).json({message: 'products testing route', products});
 }
 
+const propLogic = (prop, value) => {
+    switch(prop) {
+        case 'name': return {$regex: value, $options: 'i'};
+        default: return value;
+    }
+}
+
 function queryObject(query) {
     const queryObject = {}
     Object.keys(query).map(prop => {
         const value = query[prop]
-        value ? queryObject[prop] = value : null;
+        value ? queryObject[prop] = propLogic(prop, value) : null;
     })
     return queryObject
 }
