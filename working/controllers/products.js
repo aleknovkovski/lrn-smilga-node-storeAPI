@@ -5,17 +5,17 @@ async function getAllProductsStatic (req, res) {
     res.status(200).json({message: 'products testing route', products});
 }
 
-function queryObject(query, properties) {
+function queryObject(query) {
     const queryObject = {}
-    properties.map(property => {
-        query[property] ? queryObject[property]=query[property] : null
+    Object.keys(query).map(prop => {
+        const value = query[prop]
+        value ? queryObject[prop] = value : null;
     })
     return queryObject
 }
 
 async function getAllProducts (req, res) {
-    const properties = ['featured', 'company', 'name']
-    const products = await Product.find(queryObject(req.query, properties));
+    const products = await Product.find(queryObject(req.query));
     res.status(200).json({message: 'products route', products})
 }
 
