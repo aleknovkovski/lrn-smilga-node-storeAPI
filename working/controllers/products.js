@@ -26,10 +26,11 @@ const splitString = (sort) => {
 }
 
 async function getAllProducts (req, res) {
-    const {query} = req; const {sort} = query;
+    const {query} = req; const {sort, fields} = query;
 
     let results = Product.find(queryObject(query));
     sort ? results = results.sort(splitString(sort)) : null;
+    fields ? results = results.select(splitString(fields)) : null;
     const products = await results
 
     res.status(200).json({message: 'products route', products})
