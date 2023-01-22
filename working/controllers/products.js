@@ -31,6 +31,13 @@ async function getAllProducts (req, res) {
     let results = Product.find(queryObject(query));
     sort ? results = results.sort(splitString(sort)) : null;
     fields ? results = results.select(splitString(fields)) : null;
+
+    const page = Number(query.page) || 1;
+    const limit = Number(query.limit) || 10;
+    const skip = (page - 1) * limit;
+
+    results = results.skip(skip).limit(limit);
+
     const products = await results
 
     res.status(200).json({message: 'products route', products})
